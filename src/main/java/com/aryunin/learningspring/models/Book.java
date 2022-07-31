@@ -18,6 +18,9 @@ public class Book {
         this.publicationYear = publicationYear;
     }
 
+    public Book() {
+    }
+
     public String getTitle() {
         return title;
     }
