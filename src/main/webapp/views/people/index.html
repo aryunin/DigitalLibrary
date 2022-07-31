@@ -9,6 +9,8 @@
 <div th:each="person : ${people}">
     <p th:text="${person.getName()} + ', ' + ${person.getBirthYear()}">name and birth</p>
 </div>
+<hr>
+<a href="/people/new">Добавить нового человека</a>
 
 </body>
 </html>
