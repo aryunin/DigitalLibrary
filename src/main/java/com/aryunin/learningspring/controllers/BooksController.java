@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -43,6 +41,36 @@ public class BooksController {
         bookValidator.validate(book, bindingResult);
         if(bindingResult.hasErrors()) return "books/new";
         bookDAO.save(book);
+        return "redirect:/books";
+    }
+
+    @GetMapping("/{id}")
+    public String show(@PathVariable("id") int id, Model model) {
+        Optional<Book> book = bookDAO.get(id);
+        if(!book.isPresent()) return "redirect:/books";
+        else model.addAttribute("book", book.get());
+        return "books/show";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") int id, Model model) {
+        Optional<Book> book = bookDAO.get(id);
+        if(!book.isPresent()) return "redirect:/books";
+        model.addAttribute("book", book.get());
+        return "books/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@PathVariable("id") int id, @ModelAttribute("person") @Valid Book book, BindingResult bindingResult) {
+        bookValidator.validate(book, bindingResult);
+        if(bindingResult.hasErrors()) return "books/edit";
+        bookDAO.update(id, book);
+        return "redirect:/books";
+    }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id) {
+        bookDAO.delete(id);
         return "redirect:/books";
     }
 }
