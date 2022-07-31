@@ -31,7 +31,7 @@ public class PeopleController {
     }
 
     @GetMapping("/new")
-    public String newPersonForm(@ModelAttribute("person") Person person) {
+    public String newPerson(@ModelAttribute("person") Person person) {
         return "people/new";
     }
 
@@ -44,7 +44,7 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}")
-    public String showInfo(@PathVariable("id") int id, Model model) {
+    public String show(@PathVariable("id") int id, Model model) {
         Optional<Person> person = personDAO.get(id);
         if(!person.isPresent()) return "redirect:/people";
         else model.addAttribute("person", person.get());
