@@ -19,7 +19,7 @@ public class PersonDAO {
     }
 
     public List<Person> getAllPeople() {
-        return jdbcTemplate.query("SELECT * FROM person", new BeanPropertyRowMapper<>(Person.class));
+        return jdbcTemplate.query("SELECT person_id AS id, name, birth_year FROM person", new BeanPropertyRowMapper<>(Person.class));
     }
 
     public void save(Person person) {
@@ -28,5 +28,9 @@ public class PersonDAO {
 
     public Optional<Person> get(String name) {
         return jdbcTemplate.query("SELECT * FROM person WHERE name=?", new BeanPropertyRowMapper<>(Person.class), name).stream().findAny();
+    }
+
+    public Optional<Person> get(int id) {
+        return jdbcTemplate.query("SELECT * FROM person WHERE person_id=?", new BeanPropertyRowMapper<>(Person.class), id).stream().findAny();
     }
 }

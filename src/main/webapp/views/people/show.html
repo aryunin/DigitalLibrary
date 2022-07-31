@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${person.getName()}"></title>
+</head>
+<body>
+
+<p th:text="${person.getName()} + ', ' + ${person.getBirthYear()}">Name and birth year</p>
+<hr>
+
+</body>
+</html>

@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/people")
@@ -43,5 +41,13 @@ public class PeopleController {
         if(bindingResult.hasErrors()) return "people/new";
         personDAO.save(person);
         return "redirect:/people";
+    }
+
+    @GetMapping("/{id}")
+    public String showInfo(@PathVariable("id") int id, Model model) {
+        Optional<Person> person = personDAO.get(id);
+        if(!person.isPresent()) return "redirect:/people";
+        else model.addAttribute("person", person.get());
+        return "people/show";
     }
 }
