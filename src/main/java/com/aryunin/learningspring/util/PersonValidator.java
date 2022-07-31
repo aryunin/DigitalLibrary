@@ -1,6 +1,5 @@
 package com.aryunin.learningspring.util;
 
-import com.aryunin.learningspring.models.Book;
 import com.aryunin.learningspring.models.Person;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
