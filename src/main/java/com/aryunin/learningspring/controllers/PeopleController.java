@@ -50,4 +50,26 @@ public class PeopleController {
         else model.addAttribute("person", person.get());
         return "people/show";
     }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") int id) {
+        personDAO.delete(id);
+        return "redirect:/people";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") int id, Model model) {
+        Optional<Person> person = personDAO.get(id);
+        if(!person.isPresent()) return "redirect:/people";
+        model.addAttribute("person", person.get());
+        return "people/edit";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@PathVariable("id") int id, @ModelAttribute("person") @Valid Person person, BindingResult bindingResult) {
+        personValidator.validate(person, bindingResult);
+        if(bindingResult.hasFieldErrors("birthYear")) return "people/edit";
+        personDAO.update(id, person);
+        return "redirect:/people";
+    }
 }
