@@ -47,7 +47,8 @@ public class PeopleController {
     public String show(@PathVariable("id") int id, Model model) {
         Optional<Person> person = personDAO.get(id);
         if(!person.isPresent()) return "redirect:/people";
-        else model.addAttribute("person", person.get());
+        model.addAttribute("books", personDAO.getBooks(id));
+        model.addAttribute("person", person.get());
         return "people/show";
     }
 

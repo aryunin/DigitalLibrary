@@ -1,5 +1,6 @@
 package com.aryunin.learningspring.dao;
 
+import com.aryunin.learningspring.models.Book;
 import com.aryunin.learningspring.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -40,5 +41,10 @@ public class PersonDAO {
 
     public void update(int id, Person person) {
         jdbcTemplate.update("UPDATE person SET name=?, birth_year=? WHERE person_id=?", person.getName(), person.getBirthYear(), id);
+    }
+
+    public List<Book> getBooks(int personId) {
+        return jdbcTemplate.query("SELECT book_id AS id, title, author, publication_year FROM book WHERE person_id=?",
+                new BeanPropertyRowMapper<>(Book.class), personId);
     }
 }
