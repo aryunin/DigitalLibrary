@@ -1,6 +1,7 @@
 package com.aryunin.learningspring.controllers;
 
 import com.aryunin.learningspring.dao.BookDAO;
+import com.aryunin.learningspring.dao.PersonDAO;
 import com.aryunin.learningspring.models.Book;
 import com.aryunin.learningspring.models.Person;
 import com.aryunin.learningspring.util.BookValidator;
@@ -18,11 +19,13 @@ import java.util.Optional;
 public class BooksController {
     final private BookDAO bookDAO;
     final private BookValidator bookValidator;
+    final private PersonDAO personDAO;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, BookValidator bookValidator) {
+    public BooksController(BookDAO bookDAO, BookValidator bookValidator, PersonDAO personDAO) {
         this.bookDAO = bookDAO;
         this.bookValidator = bookValidator;
+        this.personDAO = personDAO;
     }
 
     @GetMapping
@@ -45,10 +48,16 @@ public class BooksController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable("id") int id, Model model) {
+    public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         Optional<Book> book = bookDAO.get(id);
         if(!book.isPresent()) return "redirect:/books";
-        else model.addAttribute("book", book.get());
+        model.addAttribute("book", book.get());
+
+        Optional<Person> bookOwner = bookDAO.getOwner(id);
+        if(bookOwner.isPresent()) model.addAttribute("owner", bookOwner.get());
+
+        model.addAttribute("people", personDAO.getAllPeople());
+
         return "books/show";
     }
 
@@ -71,6 +80,18 @@ public class BooksController {
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
         bookDAO.delete(id);
+        return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/assign")
+    public String assign(@PathVariable("id") int id, @ModelAttribute("person") Person person){
+        bookDAO.assign(id, person.getId());
+        return "redirect:/books";
+    }
+
+    @PatchMapping("/{id}/release")
+    public String release(@PathVariable("id") int id){
+        bookDAO.release(id);
         return "redirect:/books";
     }
 }
