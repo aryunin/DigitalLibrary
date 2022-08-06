@@ -1,22 +1,35 @@
 package com.aryunin.learningspring.models;
 
+import javax.persistence.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
+@Table(name = "person")
 public class Person {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "person_id")
     private int id;
     @NotNull(message = "The name can't be null")
     @Size(min=2, max = 255, message = "Incorrect name length")
+    @Column(name = "name")
     private String name;
+    @Column(name = "birth_year")
     private int birthYear;
+    @OneToMany(mappedBy = "holder", cascade = CascadeType.PERSIST)
+    private List<Book> books;
 
     public Person() {
     }
 
-    public Person(int id, String name, int birthYear) {
-        this.id = id;
+    public Person(String name, int birthYear) {
         this.name = name;
         this.birthYear = birthYear;
+        books = new ArrayList<>();
     }
 
     public String getName() {
@@ -41,5 +54,13 @@ public class Person {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 }

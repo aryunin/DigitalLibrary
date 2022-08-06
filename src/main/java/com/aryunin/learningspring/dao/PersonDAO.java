@@ -2,49 +2,65 @@ package com.aryunin.learningspring.dao;
 
 import com.aryunin.learningspring.models.Book;
 import com.aryunin.learningspring.models.Person;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
 public class PersonDAO {
-    private final JdbcTemplate jdbcTemplate;
+    final private SessionFactory sessionFactory;
 
     @Autowired
-    public PersonDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public PersonDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
+    @Transactional(readOnly = true)
     public List<Person> getAllPeople() {
-        return jdbcTemplate.query("SELECT person_id AS id, name, birth_year FROM person", new BeanPropertyRowMapper<>(Person.class));
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("select p from Person p", Person.class).getResultList();
     }
 
+    @Transactional
     public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO person(name, birth_year) VALUES(?,?)", person.getName(), person.getBirthYear());
+        Session session = sessionFactory.getCurrentSession();
+        session.persist(person);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Person> get(String name) {
-        return jdbcTemplate.query("SELECT person_id AS id, name, birth_year FROM person WHERE name=?", new BeanPropertyRowMapper<>(Person.class), name).stream().findAny();
+        Session session = sessionFactory.getCurrentSession();
+        Optional<Person> person = session.createQuery("select p from Person p WHERE p.name=:name", Person.class).setParameter("name", name)
+                .getResultList().stream().findAny();
+        person.ifPresent(value -> Hibernate.initialize(value.getBooks()));
+        return person;
     }
 
+    @Transactional(readOnly = true)
     public Optional<Person> get(int id) {
-        return jdbcTemplate.query("SELECT person_id AS id, name, birth_year FROM person WHERE person_id=?", new BeanPropertyRowMapper<>(Person.class), id).stream().findAny();
+        Session session = sessionFactory.getCurrentSession();
+        Optional<Person> person = Optional.ofNullable(session.get(Person.class, id));
+        person.ifPresent(value -> Hibernate.initialize(value.getBooks()));
+        return person;
     }
 
+    @Transactional
     public void delete(int id) {
-        jdbcTemplate.update("DELETE FROM person WHERE person_id=?", id);
+        Session session = sessionFactory.getCurrentSession();
+        session.remove(session.get(Person.class, id));
     }
 
+    @Transactional
     public void update(int id, Person person) {
-        jdbcTemplate.update("UPDATE person SET name=?, birth_year=? WHERE person_id=?", person.getName(), person.getBirthYear(), id);
-    }
-
-    public List<Book> getBooks(int personId) {
-        return jdbcTemplate.query("SELECT book_id AS id, title, author, publication_year FROM book WHERE person_id=?",
-                new BeanPropertyRowMapper<>(Book.class), personId);
+        Session session = sessionFactory.getCurrentSession();
+        Person p = session.get(Person.class, id);
+        p.setName(person.getName());
+        p.setBirthYear(person.getBirthYear());
     }
 }

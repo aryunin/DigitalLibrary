@@ -53,8 +53,8 @@ public class BooksController {
         if(!book.isPresent()) return "redirect:/books";
         model.addAttribute("book", book.get());
 
-        Optional<Person> bookOwner = bookDAO.getOwner(id);
-        if(bookOwner.isPresent()) model.addAttribute("owner", bookOwner.get());
+        Optional<Person> bookOwner = Optional.ofNullable(book.get().getHolder());
+        bookOwner.ifPresent(value -> model.addAttribute("owner", value));
 
         model.addAttribute("people", personDAO.getAllPeople());
 
