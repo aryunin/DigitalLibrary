@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,8 +18,8 @@ public class BookDAO {
     final private SessionFactory sessionFactory;
 
     @Autowired
-    public BookDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public BookDAO(EntityManagerFactory emf) {
+        this.sessionFactory = emf.unwrap(SessionFactory.class);
     }
 
     @Transactional(readOnly = true)
