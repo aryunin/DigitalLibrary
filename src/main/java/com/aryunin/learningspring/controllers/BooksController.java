@@ -1,8 +1,8 @@
 package com.aryunin.learningspring.controllers;
 
-import com.aryunin.learningspring.dao.BookDAO;
 import com.aryunin.learningspring.models.Book;
 import com.aryunin.learningspring.models.Person;
+import com.aryunin.learningspring.services.BooksService;
 import com.aryunin.learningspring.services.PeopleService;
 import com.aryunin.learningspring.util.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +17,20 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/books")
 public class BooksController {
-    final private BookDAO bookDAO;
+    final private BooksService booksService;
     final private BookValidator bookValidator;
     final private PeopleService peopleService;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, BookValidator bookValidator, PeopleService peopleService) {
-        this.bookDAO = bookDAO;
+    public BooksController(BooksService booksService, BookValidator bookValidator, PeopleService peopleService) {
+        this.booksService = booksService;
         this.bookValidator = bookValidator;
         this.peopleService = peopleService;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("books", bookDAO.getAllBooks());
+        model.addAttribute("books", booksService.findAll());
         return "books/index";
     }
 
@@ -43,13 +43,13 @@ public class BooksController {
     public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
         bookValidator.validate(book, bindingResult);
         if(bindingResult.hasErrors()) return "books/new";
-        bookDAO.save(book);
+        booksService.save(book);
         return "redirect:/books";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
-        Optional<Book> book = bookDAO.get(id);
+        Optional<Book> book = booksService.findById(id);
         if(!book.isPresent()) return "redirect:/books";
         model.addAttribute("book", book.get());
 
@@ -63,7 +63,7 @@ public class BooksController {
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        Optional<Book> book = bookDAO.get(id);
+        Optional<Book> book = booksService.findById(id);
         if(!book.isPresent()) return "redirect:/books";
         model.addAttribute("book", book.get());
         return "books/edit";
@@ -73,25 +73,25 @@ public class BooksController {
     public String update(@PathVariable("id") int id, @ModelAttribute("person") @Valid Book book, BindingResult bindingResult) {
         bookValidator.validate(book, bindingResult);
         if(bindingResult.hasErrors()) return "books/edit";
-        bookDAO.update(id, book);
+        booksService.update(id, book);
         return "redirect:/books";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        bookDAO.delete(id);
+        booksService.delete(id);
         return "redirect:/books";
     }
 
     @PatchMapping("/{id}/assign")
     public String assign(@PathVariable("id") int id, @ModelAttribute("person") Person person){
-        bookDAO.assign(id, person.getId());
+        booksService.assign(id, person.getId());
         return "redirect:/books";
     }
 
     @PatchMapping("/{id}/release")
     public String release(@PathVariable("id") int id){
-        bookDAO.release(id);
+        booksService.release(id);
         return "redirect:/books";
     }
 }
