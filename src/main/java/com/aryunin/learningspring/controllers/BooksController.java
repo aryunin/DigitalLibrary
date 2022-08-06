@@ -1,9 +1,9 @@
 package com.aryunin.learningspring.controllers;
 
 import com.aryunin.learningspring.dao.BookDAO;
-import com.aryunin.learningspring.dao.PersonDAO;
 import com.aryunin.learningspring.models.Book;
 import com.aryunin.learningspring.models.Person;
+import com.aryunin.learningspring.services.PeopleService;
 import com.aryunin.learningspring.util.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,13 +19,13 @@ import java.util.Optional;
 public class BooksController {
     final private BookDAO bookDAO;
     final private BookValidator bookValidator;
-    final private PersonDAO personDAO;
+    final private PeopleService peopleService;
 
     @Autowired
-    public BooksController(BookDAO bookDAO, BookValidator bookValidator, PersonDAO personDAO) {
+    public BooksController(BookDAO bookDAO, BookValidator bookValidator, PeopleService peopleService) {
         this.bookDAO = bookDAO;
         this.bookValidator = bookValidator;
-        this.personDAO = personDAO;
+        this.peopleService = peopleService;
     }
 
     @GetMapping
@@ -56,7 +56,7 @@ public class BooksController {
         Optional<Person> bookOwner = Optional.ofNullable(book.get().getHolder());
         bookOwner.ifPresent(value -> model.addAttribute("owner", value));
 
-        model.addAttribute("people", personDAO.getAllPeople());
+        model.addAttribute("people", peopleService.findAll());
 
         return "books/show";
     }

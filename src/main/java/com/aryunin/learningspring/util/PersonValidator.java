@@ -1,7 +1,7 @@
 package com.aryunin.learningspring.util;
 
-import com.aryunin.learningspring.dao.PersonDAO;
 import com.aryunin.learningspring.models.Person;
+import com.aryunin.learningspring.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -11,11 +11,11 @@ import java.util.Calendar;
 
 @Component
 public class PersonValidator implements Validator {
-    final private PersonDAO personDAO;
+    final private PeopleService peopleService;
 
     @Autowired
-    public PersonValidator(PersonDAO personDAO) {
-        this.personDAO = personDAO;
+    public PersonValidator(PeopleService peopleService) {
+        this.peopleService = peopleService;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class PersonValidator implements Validator {
     public void validate(Object target, Errors errors) {
         Person person = (Person) target;
 
-        if(personDAO.get(person.getName()).isPresent()) errors.rejectValue("name", "", "This name is already exists");
+        if(peopleService.findByName(person.getName()).isPresent()) errors.rejectValue("name", "", "This name is already exists");
 
         Calendar calendar = Calendar.getInstance();
         if(person.getBirthYear() < 1900) errors.rejectValue("birthYear", "", "The year of birth should be later than 1900");
