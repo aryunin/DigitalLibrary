@@ -83,4 +83,8 @@ public class BooksService {
         book.get().getHolder().getBooks().remove(book.get());
         book.get().setHolder(null);
     }
+
+    public List<Book> findByTitleStartingWith(String startingWith) {
+        return booksRepository.findByTitleStartingWith(startingWith);
+    }
 }

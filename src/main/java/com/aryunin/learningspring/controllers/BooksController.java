@@ -99,4 +99,10 @@ public class BooksController {
         booksService.release(id);
         return "redirect:/books";
     }
+
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam Optional<String> search_query) {
+        search_query.ifPresent(s -> model.addAttribute("books", booksService.findByTitleStartingWith(s)));
+        return "books/search";
+    }
 }
