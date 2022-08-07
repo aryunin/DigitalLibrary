@@ -6,6 +6,7 @@ import com.aryunin.learningspring.repositories.BooksRepository;
 import com.aryunin.learningspring.repositories.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +29,18 @@ public class BooksService {
         return booksRepository.findAll();
     }
 
+    public List<Book> findAll(boolean sortByYear) {
+        return (sortByYear) ? booksRepository.findAll(Sort.by("publicationYear")) : findAll();
+    }
+
     public List<Book> findPage(int page, int booksPerPage) {
         return booksRepository.findAll(PageRequest.of(page, booksPerPage)).getContent();
+    }
+
+    public List<Book> findPage(int page, int booksPerPage, boolean sortByYear) {
+        return (sortByYear) ? booksRepository
+                .findAll(PageRequest.of(page, booksPerPage, Sort.by("publicationYear")))
+                .getContent() : findPage(page, booksPerPage);
     }
 
     public Optional<Book> findById(int id) {
