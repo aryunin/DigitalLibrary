@@ -93,6 +93,7 @@ public class BooksService {
         if(!book.isPresent()) throw new RuntimeException("The book for releasing was not found");
         book.get().getHolder().getBooks().remove(book.get());
         book.get().setHolder(null);
+        book.get().setAssignedAt(null);
     }
 
     public List<Book> findByTitleStartingWith(String startingWith) {
