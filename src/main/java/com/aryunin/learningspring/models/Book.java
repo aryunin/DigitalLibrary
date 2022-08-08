@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "book")
@@ -25,6 +26,13 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "person_id", referencedColumnName = "person_id")
     private Person holder;
+
+    @Column(name = "assigned_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date assignedAt;
+
+    @Transient
+    private boolean isOverdue = false;
 
     public Book(String title, String author, int publicationYear) {
         this.title = title;
@@ -73,5 +81,21 @@ public class Book {
 
     public void setHolder(Person holder) {
         this.holder = holder;
+    }
+
+    public Date getAssignedAt() {
+        return assignedAt;
+    }
+
+    public void setAssignedAt(Date assignedAt) {
+        this.assignedAt = assignedAt;
+    }
+
+    public boolean isOverdue() {
+        return isOverdue;
+    }
+
+    public void setOverdue(boolean overdue) {
+        isOverdue = overdue;
     }
 }

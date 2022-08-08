@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,14 @@ import java.util.Optional;
 public class BooksService {
     private final BooksRepository booksRepository;
     private final PeopleRepository peopleRepository;
+
+    public void checkOverdue(Book book) {
+        final long EXPIRATION_DAYS = 10; // days
+        final long MILLISECONDS_PER_DAY = 86400000L;
+        Date currentTime = new Date();
+        if(currentTime.getTime() - book.getAssignedAt().getTime()
+                > EXPIRATION_DAYS * MILLISECONDS_PER_DAY) book.setOverdue(true);
+    }
 
     @Autowired
     public BooksService(BooksRepository repository, PeopleRepository peopleRepository) {
@@ -72,6 +81,8 @@ public class BooksService {
         Person person = peopleRepository.getReferenceById(personId);
         // Если человек с данным ID существует, то книгу получится ему присвоить, иначе сработает ограничение на БД
         book.get().setHolder(person);
+        // Также устанавливаем время взятия книги
+        book.get().setAssignedAt(new Date());
         // Если ограничение вторичного ключа на БД не сработало, значит человек существует, и ему можно присвоить книгу
         person.getBooks().add(book.get());
     }
