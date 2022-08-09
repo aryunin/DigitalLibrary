@@ -1,10 +1,10 @@
-package com.aryunin.learningspring.controllers;
+package com.aryunin.DigitalLibraryBoot.controllers;
 
-import com.aryunin.learningspring.models.Book;
-import com.aryunin.learningspring.models.Person;
-import com.aryunin.learningspring.services.BooksService;
-import com.aryunin.learningspring.services.PeopleService;
-import com.aryunin.learningspring.util.BookValidator;
+import com.aryunin.DigitalLibraryBoot.models.Book;
+import com.aryunin.DigitalLibraryBoot.models.Person;
+import com.aryunin.DigitalLibraryBoot.services.BooksService;
+import com.aryunin.DigitalLibraryBoot.services.PeopleService;
+import com.aryunin.DigitalLibraryBoot.util.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

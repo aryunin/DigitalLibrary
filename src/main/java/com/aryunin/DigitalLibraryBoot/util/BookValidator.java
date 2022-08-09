@@ -1,6 +1,6 @@
-package com.aryunin.learningspring.util;
+package com.aryunin.DigitalLibraryBoot.util;
 
-import com.aryunin.learningspring.models.Book;
+import com.aryunin.DigitalLibraryBoot.models.Book;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;

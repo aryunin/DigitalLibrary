@@ -1,7 +1,7 @@
-package com.aryunin.learningspring.util;
+package com.aryunin.DigitalLibraryBoot.util;
 
-import com.aryunin.learningspring.models.Person;
-import com.aryunin.learningspring.services.PeopleService;
+import com.aryunin.DigitalLibraryBoot.models.Person;
+import com.aryunin.DigitalLibraryBoot.services.PeopleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

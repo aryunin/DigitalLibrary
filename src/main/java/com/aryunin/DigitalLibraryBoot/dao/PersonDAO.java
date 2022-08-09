@@ -1,4 +1,4 @@
-package com.aryunin.learningspring.dao;
+package com.aryunin.DigitalLibraryBoot.dao;
 
 import org.springframework.stereotype.Component;
 

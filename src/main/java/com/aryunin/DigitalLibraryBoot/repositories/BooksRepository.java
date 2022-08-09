@@ -1,6 +1,6 @@
-package com.aryunin.learningspring.repositories;
+package com.aryunin.DigitalLibraryBoot.repositories;
 
-import com.aryunin.learningspring.models.Book;
+import com.aryunin.DigitalLibraryBoot.models.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

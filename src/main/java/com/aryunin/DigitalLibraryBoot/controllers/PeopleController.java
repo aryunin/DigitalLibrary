@@ -1,8 +1,8 @@
-package com.aryunin.learningspring.controllers;
+package com.aryunin.DigitalLibraryBoot.controllers;
 
-import com.aryunin.learningspring.models.Person;
-import com.aryunin.learningspring.services.PeopleService;
-import com.aryunin.learningspring.util.PersonValidator;
+import com.aryunin.DigitalLibraryBoot.models.Person;
+import com.aryunin.DigitalLibraryBoot.services.PeopleService;
+import com.aryunin.DigitalLibraryBoot.util.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

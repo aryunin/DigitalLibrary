@@ -1,8 +1,8 @@
-package com.aryunin.learningspring.services;
+package com.aryunin.DigitalLibraryBoot.services;
 
-import com.aryunin.learningspring.models.Book;
-import com.aryunin.learningspring.models.Person;
-import com.aryunin.learningspring.repositories.PeopleRepository;
+import com.aryunin.DigitalLibraryBoot.models.Book;
+import com.aryunin.DigitalLibraryBoot.models.Person;
+import com.aryunin.DigitalLibraryBoot.repositories.PeopleRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
